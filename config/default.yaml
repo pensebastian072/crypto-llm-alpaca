@@ -1,0 +1,87 @@
+universe:
+  # BTC excluded from active trade universe (per Phase 1 backtest evidence).
+  # Kept in per_symbol map as sentiment regime sensor (Phase 2).
+  symbols: ["ETH/USD", "SOL/USD", "AVAX/USD", "LINK/USD"]
+  quote_currency: "USD"
+  allow_shorts: false
+
+per_symbol:
+  BTC/USD:
+    trade_enabled: false
+  ETH/USD:
+    atr_stop_multiple: 2.0
+    take_profit_pct: 0.15
+  SOL/USD:
+    atr_stop_multiple: 2.5
+    take_profit_pct: 0.15
+  AVAX/USD:
+    atr_stop_multiple: 2.5
+    take_profit_pct: 0.20
+  LINK/USD:
+    atr_stop_multiple: 2.5
+    take_profit_pct: 0.15
+
+data:
+  timeframe: "1Hour"
+  lookback_bars: 120
+  rss_feeds:
+    - "https://www.coindesk.com/arc/outboundfeeds/rss/"
+
+llm:
+  provider: "huggingface"
+  model: "meta-llama/Llama-3.1-8B-Instruct"
+  min_confidence: 0.55
+
+scoring:
+  buy_threshold: 0.35
+  sell_threshold: -0.35
+  sentiment_weight: 0.45
+  momentum_weight: 0.35
+  volatility_weight: 0.20
+
+strategy:
+  breakout_lookback: 20
+  volume_lookback: 20
+  relative_volume_min: 1.25
+  range_expansion_min: 1.10
+  min_close_location: 0.60
+  momentum_lookback: 12
+  htf_timeframe: "4Hour"
+  htf_trend_lookback: 6
+  require_htf_trend: true
+  atr_window: 14
+  atr_short_window: 6
+  atr_long_window: 24
+  atr_stop_multiple: 2.0
+  atr_trail_multiple: 2.5
+  min_expected_move_fee_multiple: 3.0
+  top_n_per_bar: 3
+
+costs:
+  taker_bps: 25.0
+  maker_bps: 15.0
+  default_fill_model: "taker"
+
+risk:
+  max_total_exposure_pct: 0.30
+  min_positions: 3
+  max_positions: 5
+  stop_loss_pct: 0.01
+  risk_per_trade_pct: 0.01
+  max_symbol_exposure_pct: 0.10
+  daily_drawdown_stop_pct: 0.05
+  volatility_spike_limit: 0.08
+  take_profit_levels:
+    - gain_pct: 0.10
+      sell_fraction: 0.25
+    - gain_pct: 0.20
+      sell_fraction: 0.25
+    - gain_pct: 0.50
+      sell_fraction: 0.50
+
+broker:
+  paper_base_url: "https://paper-api.alpaca.markets"
+  live_trading_enabled: false
+
+storage:
+  path: "crypto_llm_alpaca.sqlite3"

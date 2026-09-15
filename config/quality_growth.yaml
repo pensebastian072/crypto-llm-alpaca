@@ -1,0 +1,223 @@
+universe:
+  symbols:
+  - AAVE/USD
+  - UNI/USD
+  - DOT/USD
+  - GRT/USD
+  - ARB/USD
+  - CRV/USD
+  - YFI/USD
+  - SUSHI/USD
+  - BAT/USD
+  - XTZ/USD
+  quote_currency: USD
+  allow_shorts: false
+
+per_symbol:
+  BTC/USD:
+    trade_enabled: false
+  # Watch-only until Alpaca has a longer ARB/USD history for honest validation.
+  ARB/USD:
+    trade_enabled: false
+  # Watch-only after first 2-year run: profile is interesting, execution was a persistent drag.
+  GRT/USD:
+    trade_enabled: false
+
+project_profiles:
+  AAVE/USD:
+    category: DeFi lending
+    thesis: Blue-chip DeFi lending protocol with durable usage, governance history, and deep market awareness.
+    quality_score: 0.78
+    growth_score: 0.68
+    backer_score: 0.72
+    liquidity_score: 0.78
+    risk_score: 0.42
+    keywords: [aave, aave protocol, defi lending]
+  UNI/USD:
+    category: DeFi exchange infrastructure
+    thesis: Leading decentralized exchange brand with broad ecosystem mindshare and fee-switch or protocol-growth optionality.
+    quality_score: 0.76
+    growth_score: 0.66
+    backer_score: 0.70
+    liquidity_score: 0.80
+    risk_score: 0.44
+    keywords: [uniswap, uni, decentralized exchange]
+  DOT/USD:
+    category: Interoperability L1
+    thesis: Established interoperability network where growth thesis depends on renewed ecosystem activity and developer traction.
+    quality_score: 0.68
+    growth_score: 0.58
+    backer_score: 0.66
+    liquidity_score: 0.78
+    risk_score: 0.52
+    keywords: [polkadot, dot, parachain]
+  GRT/USD:
+    category: Data indexing
+    thesis: Crypto data indexing infrastructure with AI/data narrative fit and usage-linked upside if query demand expands.
+    quality_score: 0.70
+    growth_score: 0.72
+    backer_score: 0.64
+    liquidity_score: 0.64
+    risk_score: 0.50
+    keywords: [the graph, graph protocol, grt, indexing]
+  ARB/USD:
+    category: Ethereum L2
+    thesis: Large Ethereum scaling ecosystem with strong developer activity and token upside tied to L2 revenue and governance value.
+    quality_score: 0.72
+    growth_score: 0.76
+    backer_score: 0.74
+    liquidity_score: 0.66
+    risk_score: 0.55
+    keywords: [arbitrum, arb, ethereum l2, layer 2]
+  CRV/USD:
+    category: DeFi liquidity
+    thesis: Core stablecoin liquidity venue with high cyclicality; upside needs clear volume, fee, or ecosystem recovery evidence.
+    quality_score: 0.58
+    growth_score: 0.62
+    backer_score: 0.54
+    liquidity_score: 0.62
+    risk_score: 0.72
+    keywords: [curve, curve finance, curve dao, crv]
+  YFI/USD:
+    category: DeFi yield
+    thesis: Scarce-supply DeFi yield asset with reflexive upside, but needs fresh product or revenue traction before sizing up.
+    quality_score: 0.57
+    growth_score: 0.58
+    backer_score: 0.52
+    liquidity_score: 0.56
+    risk_score: 0.70
+    keywords: [yearn, yearn finance, yfi]
+  SUSHI/USD:
+    category: DeFi exchange
+    thesis: Higher-beta DeFi exchange token; treat as opportunistic only when news, volume, and price momentum all confirm.
+    quality_score: 0.50
+    growth_score: 0.58
+    backer_score: 0.44
+    liquidity_score: 0.58
+    risk_score: 0.76
+    keywords: [sushi, sushiswap]
+  BAT/USD:
+    category: Consumer crypto
+    thesis: Brave ecosystem token with real consumer distribution, but upside depends on renewed ad, wallet, or browser-token growth.
+    quality_score: 0.62
+    growth_score: 0.55
+    backer_score: 0.58
+    liquidity_score: 0.62
+    risk_score: 0.58
+    keywords: [basic attention token, brave, bat]
+  XTZ/USD:
+    category: Smart-contract L1
+    thesis: Established L1 with governance history; needs clear ecosystem acceleration before it earns aggressive allocation.
+    quality_score: 0.60
+    growth_score: 0.52
+    backer_score: 0.58
+    liquidity_score: 0.60
+    risk_score: 0.62
+    keywords: [tezos, xtz]
+
+data:
+  timeframe: 1Hour
+  # Store hourly bars, then derive 4H, daily, and weekly confirmation from them.
+  lookback_bars: 1600
+  rss_feeds:
+  - https://www.coindesk.com/arc/outboundfeeds/rss/
+  - https://cointelegraph.com/rss
+  - https://decrypt.co/feed
+
+llm:
+  provider: huggingface
+  model: meta-llama/Llama-3.1-8B-Instruct
+  min_confidence: 0.55
+
+scoring:
+  buy_threshold: 0.2
+  sell_threshold: -0.35
+  risk_off_threshold: -0.4
+  sentiment_weight: 0.45
+  momentum_weight: 0.35
+  volatility_weight: 0.2
+
+strategy:
+  breakout_lookback: 120
+  volume_lookback: 120
+  relative_volume_min: 1.25
+  range_expansion_min: 1.05
+  min_close_location: 0.55
+  momentum_lookback: 96
+  htf_timeframe: 4Hour
+  htf_trend_lookback: 24
+  require_htf_trend: true
+  atr_window: 28
+  atr_short_window: 14
+  atr_long_window: 72
+  atr_stop_multiple: 3.2
+  atr_trail_multiple: 5.0
+  min_expected_move_fee_multiple: 4.0
+  top_n_per_bar: 3
+
+quality_growth:
+  min_profile_score: 0.60
+  min_momentum_pct: 0.025
+  min_relative_volume: 1.25
+  max_relative_volume: 75.0
+  min_volume_acceleration: 1.1
+  min_htf_trend_pct: 0.0
+  max_atr_pct: 0.18
+  min_expected_move_fee_multiple: 4.0
+  profile_weight: 0.35
+  momentum_weight: 0.25
+  volume_weight: 0.20
+  trend_weight: 0.10
+  sentiment_weight: 0.10
+  min_mtf_trend_score: 0.45
+  require_mtf_alignment: true
+  decision_interval_hours: 4
+  use_defillama: true
+  defillama_cache_ttl_sec: 21600
+  use_narratives: true
+  narrative_current_days: 7
+  narrative_previous_days: 7
+  backtest_use_fund_style: true
+  backtest_news_window_days: 14
+  backtest_allow_research_promotions: false
+  research_promotion_min_score: 0.20
+  research_promotion_size_scale: 0.35
+  research_promotion_symbols:
+  - CRV/USD
+  - XTZ/USD
+  atr_stop_multiple: 3.2
+  atr_trail_multiple: 5.0
+  top_n_per_bar: 3
+
+costs:
+  taker_bps: 25.0
+  maker_bps: 15.0
+  default_fill_model: taker
+
+risk:
+  max_total_exposure_pct: 0.35
+  min_positions: 3
+  max_positions: 5
+  stop_loss_pct: 0.08
+  risk_per_trade_pct: 0.008
+  max_symbol_exposure_pct: 0.08
+  daily_drawdown_stop_pct: 0.05
+  volatility_spike_limit: 0.12
+  take_profit_levels:
+  - gain_pct: 1.00
+    sell_fraction: 0.20
+  - gain_pct: 2.00
+    sell_fraction: 0.30
+  - gain_pct: 5.00
+    sell_fraction: 0.25
+
+broker:
+  paper_base_url: https://paper-api.alpaca.markets
+  live_trading_enabled: false
+
+regime:
+  enabled: true
+  sensor_symbol: BTC/USD
+
+storage:
+  path: crypto_llm_alpaca.sqlite3
