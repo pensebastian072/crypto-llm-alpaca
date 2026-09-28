@@ -1,0 +1,2 @@
+# Installs this package (pyproject.toml) with its dependencies. Used by install.bat / install.sh.
+-e .
