@@ -1,2 +1,0 @@
-[console_scripts]
-crypto-llm = crypto_llm_alpaca.cli:main

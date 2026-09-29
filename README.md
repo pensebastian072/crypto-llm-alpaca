@@ -1,5 +1,13 @@
 # crypto-llm-alpaca
 
+<!-- one-tap-install -->
+[![Download ZIP](https://img.shields.io/badge/Download-ZIP-2ea44f?style=for-the-badge&logo=github)](https://github.com/pensebastian072/crypto-llm-alpaca/archive/refs/heads/main.zip)
+
+**Run it on your computer in 3 steps:** 1) [download the ZIP](https://github.com/pensebastian072/crypto-llm-alpaca/archive/refs/heads/main.zip) · 2) unzip it · 3) double-click **`install.bat`** (Windows) or run **`./install.sh`** (macOS/Linux).
+The Streamlit app opens in your browser at `http://127.0.0.1:8502` - it runs only on your machine. Next time use `start.bat` / `./start.sh`.
+Paper trading only. Every page opens without keys; paper trading and live positions need your own Alpaca **paper** keys in `.env` (see `.env.example`).
+<!-- one-tap-install -->
+
 Paper-only crypto trading research system using Alpaca, structured LLM features, SQLite audit trails, and rule-based execution.
 
 The LLM is a feature extractor, not the trader. The decision engine combines validated LLM sentiment with technical features and risk gates. V1 defaults to offline-safe mock LLM behavior and refuses Alpaca paper actions unless paper credentials are present.
