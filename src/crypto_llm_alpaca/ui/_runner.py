@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -54,10 +55,34 @@ def run_cli(args: list[str], *, config: str | None = None, timeout: float | None
     return CliResult(returncode=proc.returncode, stdout=proc.stdout, stderr=proc.stderr)
 
 
+_ERROR_LINE = re.compile(r"^[A-Za-z_.]*(Error|Exception)\b|^error\b", re.IGNORECASE)
+_MISSING_KEY = re.compile(
+    r"(api[_ ]?key|token|secret)\w*.*\b(required|missing|not set)"
+    r"|(required|missing|not set)\b.*\b(api[_ ]?key|token)"
+    r"|KeyError: '[A-Z0-9_]*(KEY|TOKEN|SECRET)[A-Z0-9_]*'",
+    re.IGNORECASE,
+)
+
+
+def error_summary(stderr: str) -> str:
+    """The one line of a traceback a person needs: the final exception message."""
+    lines = [ln.strip() for ln in (stderr or "").splitlines() if ln.strip()]
+    for line in reversed(lines):
+        if _ERROR_LINE.match(line):
+            return line
+    return lines[-1] if lines else "no error output"
+
+
 def render_result(st_module, result: CliResult, label: str = "CLI output") -> None:
-    """Render a CliResult inside a Streamlit expander; clear cache + rerun on success."""
+    """Render a CliResult; on failure show the exception line up front and keep the raw
+    output in a collapsed expander. Clear cache + rerun on success."""
     badge = "OK" if result.ok else f"FAIL ({result.returncode})"
-    with st_module.expander(f"{label} — {badge}", expanded=not result.ok):
+    if not result.ok:
+        summary = error_summary(result.stderr)
+        st_module.error(f"**{label} failed:** {summary}")
+        if _MISSING_KEY.search(summary):
+            st_module.info("Add the missing key to `.env` (see `.env.example`), then restart the app.")
+    with st_module.expander(f"{label} — {badge}", expanded=False):
         if result.stdout:
             st_module.code(result.stdout, language="json")
         if result.stderr:
